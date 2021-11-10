@@ -6,20 +6,22 @@
 using namespace arma;
 using namespace std;
 
-class Ising{
+class Ising
+{
 public:
+  int L_in;
+  int n_spins_in;
+  int n_spins_squared_in;
+  double beta_in;
+  vec w;
+  vec exp_vals;
+  string spinconfig_in;
 
   Ising(int L, double T, string spinconfig);
-
-  int L_in, n_spins_in, n_spins_squared_in;
-  double beta_in;
-  vec w, exp_vals;
-  string spinconfig_in;
 
   //void metropolis(SpinSystem *system);
   void metropolis();
   void montecarlo(double T, int no_cycles);
-
 };
 
 #endif

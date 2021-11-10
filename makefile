@@ -2,10 +2,10 @@
 all: compile run
 
 compile:
-	g++ -std=c++11 -larmadillo main.cpp spin_system.cpp ising_model.cpp -o main.out
+	g++ ./src/main.cpp ./src/spin_system.cpp ./src/ising_model.cpp -o main.o -std=c++11 -larmadillo 
 
-run: ./main.out
+run: ./main.o
 
-#clean: rm -f *.o *~
+clean: rm -f *.o *~
 
 #use as: make
