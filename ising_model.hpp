@@ -11,7 +11,7 @@ public:
 
   Ising(int L, double T, string spinconfig);
 
-  int L_in, n_spins_in, n_spins_squared_in;
+  int L_in, n_spins_in;
   double beta_in;
   vec w, exp_vals;
   string spinconfig_in;

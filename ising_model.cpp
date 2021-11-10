@@ -10,7 +10,6 @@ Ising::Ising(int L, double T, string spinconfig){
   L_in = L;
   n_spins_in = L * L;
   spinconfig_in = spinconfig;
-  n_spins_squared_in = n_spins_in * n_spins_in;
   beta_in = 1./T; //k = J = 1
   exp_vals = vec(4);
   w  = vec(17, fill::zeros);
@@ -83,9 +82,9 @@ void Ising::metropolis(){
 
     //Compute energy and magnetization per spin
     exp_E /= n_spins_in * no_cycles;
-    exp_E_sq /= n_spins_squared_in * no_cycles;
+    exp_E_sq /= n_spins_in * n_spins_in * no_cycles;
     exp_M /= n_spins_in * no_cycles;
-    exp_E_sq /= n_spins_squared_in * no_cycles;
+    exp_M_sq /= n_spins_in * n_spins_in * no_cycles;
 
     exp_vals(0) = exp_E;
     exp_vals(1) = exp_E_sq;
