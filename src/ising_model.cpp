@@ -15,6 +15,7 @@ Ising::Ising(int L, double T, string spinconfig)
   beta_in = 1. / T; //k = J = 1
   exp_vals = vec(4);
   w = vec(17, fill::zeros);
+
   metropolis();
 }
 
@@ -80,7 +81,7 @@ void Ising::montecarlo(double T, int no_cycles)
   ofstream fout;
   fout.open("./out/data/montecarlo_cycle_expE_expM.txt");
 
-  for (int cycle = 0; cycle <= no_cycles; cycle++)
+  for (int cycle = 0; cycle < no_cycles; cycle++)
   {
 
     SpinSystem system(L_in, spinconfig_in);
