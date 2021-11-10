@@ -11,6 +11,7 @@ using namespace arma;
 
 SpinSystem::SpinSystem(int L, string spinconfig){
   L_in = L;
+  n_spins_in = L * L;
 
   if (spinconfig == "ordered"){
     spin_mat_in = imat(L, L).fill(1);
@@ -29,7 +30,9 @@ void SpinSystem::initialize(){
     for (int i = 0; i < L_in; i++){
       for (int j = 0; j < L_in; j++){
         energy_in -= spin_mat(i, j) * (spin_mat(i + 1, j) + spin_mat(i, j + 1));
+        //energy_in /= n_spins_in;
         magn_in += spin_mat(i,j);
+        //magn_in /= n_spins_in;
     }
   }
 }
