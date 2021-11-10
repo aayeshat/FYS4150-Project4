@@ -20,14 +20,13 @@ Ising::Ising(int L, double T, string spinconfig)
 
 void Ising::metropolis()
 {
+  SpinSystem system(L_in, spinconfig_in);
 
   //Mersienne Twister random number generator
   random_device rd;
   mt19937_64 gen(rd());
   uniform_real_distribution<double> random_number(0.0, 1.0);
   uniform_real_distribution<double> random_to_L(0.0, L_in);
-
-  SpinSystem system(L_in, spinconfig_in);
 
   //Compute array w containing possible Delta_E values from -8J to 8J
   for (int i = 0; i <= 17; i += 4)
@@ -99,9 +98,9 @@ void Ising::montecarlo(double T, int no_cycles)
 
   //Compute energy and magnetization per spin
   exp_E /= n_spins_in * no_cycles;
-  exp_E_sq /= n_spins_squared_in * no_cycles;
+  exp_E_sq /= n_spins_in * n_spins_in * no_cycles;
   exp_M /= n_spins_in * no_cycles;
-  exp_E_sq /= n_spins_squared_in * no_cycles;
+  exp_M_sq /= n_spins_in * n_spins_in * no_cycles;
 
   exp_vals(0) = exp_E;
   exp_vals(1) = exp_E_sq;

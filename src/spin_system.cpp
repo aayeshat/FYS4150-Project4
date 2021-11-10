@@ -11,6 +11,7 @@ using namespace arma;
 SpinSystem::SpinSystem(int L, string spinconfig)
 {
   L_in = L;
+  n_spins_in = L * L;
 
   if (spinconfig == "ordered")
   {

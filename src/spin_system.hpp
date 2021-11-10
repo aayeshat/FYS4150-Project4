@@ -11,7 +11,7 @@ class SpinSystem
 public:
   SpinSystem(int L, string spinconfig);
 
-  int L_in;
+  int L_in, n_spins_in;
   double energy_in, magn_in;
   imat spin_mat_in;
 
