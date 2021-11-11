@@ -6,9 +6,9 @@
 using namespace arma;
 using namespace std;
 
-class SpinSystem{
+class SpinSystem
+{
 public:
-
   SpinSystem(int L, string spinconfig);
 
   int L_in, n_spins_in;
@@ -23,7 +23,6 @@ public:
   int idx(int index);
   void initialize();
   int spin_mat(int i, int j);
-
 };
 
 #endif
