@@ -21,7 +21,7 @@ void analytic(double T)
   double M_sq = 32. / Z * (exp(8) + 1);
 
   double e = -8. / Z * sinh(8.);
-  double e_sq = 32. / Z * cosh(8);
+  double e_sq = 16. / Z * cosh(8);
   double m = 2. / Z * (2 + exp(8));
   double m_sq = 2. / Z * (1 + exp(8));
 
