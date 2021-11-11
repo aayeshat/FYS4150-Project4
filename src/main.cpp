@@ -20,25 +20,20 @@ void analytic(double T)
   double M_big = 8. / Z * (exp(8) + 2);
   double M_sq = 32. / Z * (exp(8) + 1);
 
+  double e = -8. / Z * sinh(8.);
+  double e_sq = 32. / Z * cosh(8);
+  double m = 2. / Z * (2 + exp(8));
+  double m_sq = 2. / Z * (1 + exp(8));
 
-  double e_exc = -8. / Z * sinh(8);
-
-  //double e_exc_sq = 16. / Z * (2);
-  //double m_exc = 1. / Z_big * (2 * exp(2.) + 1);
-  //double m_exc_sq = 1. / (2 * Z) * (4 * exp(1) + 1);
-
-  double m_ = (1. / Z) * (2 * exp(8) + 4);
-
-  cout << "big E " << E_big << endl; //riktig for E
+  cout << "big E " << E_big << endl;
   cout << "big E squared " << E_sq << endl;
   cout << "big M " << M_big << endl;
   cout << "big M squared " << M_sq << endl;
-  // cout << "e_exc " << e_exc << endl; //resultat halvparten av E
-  // cout << "e_exc_sq  " << e_exc_sq << endl;
-  // cout << "big E2? " << e_exc_E << endl;
-  // cout << "m  " << m_exc << endl;
-  // cout << "m squared " << m_exc_sq << endl;
-  // cout << "m " << m_ << endl;
+
+  cout << "e " << e << endl;
+  cout << "e squared " << e_sq << endl;
+  cout << "m " << m << endl;
+  cout << "m squared" << m_sq << endl;
 }
 
 int main()
@@ -47,7 +42,7 @@ int main()
   int L = 2;
   double T = 1.;
 
-  int no_cycles = 1000; //no. of monte carlo cycles
+  int no_cycles = 10000; //no. of monte carlo cycles
 
   Ising ising(L, T, "ordered");
   ising.montecarlo(T, no_cycles);
