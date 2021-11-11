@@ -39,23 +39,23 @@ void analytic(double T)
 int main()
 {
 
-  int L = 2;
-  double T = 1.;
+  int L = 20;
+  double T = 2.4;
 
-  int no_cycles = 1000; //no. of monte carlo cycles
+  int no_cycles = 10000; //no. of monte carlo cycles
 
-  Ising ising(L, T, "ordered");
-  // ising.montecarlo(T, no_cycles);
-  // cout << "exp_vals" << endl
-  //      << ising.exp_vals << endl;
+  Ising ising(L, T, "unordered");
 
   analytic(T);
 
   ising.montecarlo(T, no_cycles);
-  ising.exp_e.save("../out/data/energy_problem5.bin");
-  ising.exp_e.save("../out/data/energy_problem5.txt", raw_ascii);
-  ising.exp_m.save("../out/data/magn_problem5.bin");
-  ising.exp_m.save("../out/data/magn_problem5.txt", raw_ascii);
+  //ising.exp_e.save("../out/data/energy_T1_ordered_problem5.txt", raw_ascii);
+  //ising.exp_e.save("../out/data/energy_T1_unordered_problem5.txt", raw_ascii);
+
+  //ising.exp_e.save("../out/data/energy_T24_ordered_problem5.txt", raw_ascii);
+  //ising.exp_e.save("../out/data/energy_T24_unordered_problem5.txt", raw_ascii);
+
+
 
 
   return 0;
