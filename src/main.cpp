@@ -11,28 +11,34 @@ using namespace arma;
 
 void analytic(double T)
 {
-  double Z = 4. * (cosh(2) + 3);               //Marias
-  double Z_2 = 2. * exp(-2) + 2 * exp(2) + 12; //min, blir feil
-  double e_exc = -8. / Z_2 * sinh(2);
-  double e_exc_sq = 16. / Z * (2);
+  double Z = 2. * exp(-8) + 2 * exp(8) + 12;
+  double Z_hyp = 4. * ( cosh(8.) + 3);
 
-  double Z_big = 4. * (4. * cosh(8.) + 3); //riktig for E
-  double E_big = -32. / Z_big * sinh(8.);  //riktig for E
 
-  double e_exc_E = -8 / Z_big * sinh(8);
+  double E_big = -32. / Z * sinh(8.);  //riktig for E
+  double E_sq = 2. / Z * (256 * cosh(8));
+  double M_big = 8. / Z * (exp(8) + 2);
+  double M_sq = 32. / Z * (exp(8) + 1);
 
-  double m_exc = 1. / Z * (2 * exp(2.) + 1);
-  double m_exc_sq = 1. / (2 * Z) * (4 * exp(1) + 1);
 
-  double m_ = (1. / Z_big) * (2 * exp(8) + 4);
+  double e_exc = -8. / Z * sinh(8);
+
+  //double e_exc_sq = 16. / Z * (2);
+  //double m_exc = 1. / Z_big * (2 * exp(2.) + 1);
+  //double m_exc_sq = 1. / (2 * Z) * (4 * exp(1) + 1);
+
+  double m_ = (1. / Z) * (2 * exp(8) + 4);
 
   cout << "big E " << E_big << endl; //riktig for E
-  cout << "e_exc " << e_exc << endl; //resultat halvparten av E
-  cout << "e_exc_sq  " << e_exc_sq << endl;
-  cout << "big E2? " << e_exc_E << endl;
+  cout << "big E squared " << E_sq << endl;
+  cout << "big M " << M_big << endl;
+  cout << "big M squared " << M_sq << endl;
+  // cout << "e_exc " << e_exc << endl; //resultat halvparten av E
+  // cout << "e_exc_sq  " << e_exc_sq << endl;
+  // cout << "big E2? " << e_exc_E << endl;
   // cout << "m  " << m_exc << endl;
   // cout << "m squared " << m_exc_sq << endl;
-  cout << "m " << m_ << endl;
+  // cout << "m " << m_ << endl;
 }
 
 int main()
