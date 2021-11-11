@@ -42,22 +42,21 @@ int main()
   int L = 2;
   double T = 1.;
 
-  int no_cycles = 10000; //no. of monte carlo cycles
+  int no_cycles = 1000; //no. of monte carlo cycles
 
   Ising ising(L, T, "ordered");
-  ising.montecarlo(T, no_cycles);
-  cout << "exp_vals" << endl
-       << ising.exp_vals << endl;
+  // ising.montecarlo(T, no_cycles);
+  // cout << "exp_vals" << endl
+  //      << ising.exp_vals << endl;
 
   analytic(T);
-  //ising.output(T, no_cycles);
-  ofstream fout;
-  fout.open("./out/data/montecarlo_cycle_expe_expe.txt");
+
   ising.montecarlo(T, no_cycles);
-  // exp_e = exp_E * norm;
-  // exp_m = exp_M * norm;
-  fout << ising.exp_e << ising.exp_m << endl;
-  fout.close();
+  ising.exp_e.save("../out/data/energy_problem5.bin");
+  ising.exp_e.save("../out/data/energy_problem5.txt", raw_ascii);
+  ising.exp_m.save("../out/data/magn_problem5.bin");
+  ising.exp_m.save("../out/data/magn_problem5.txt", raw_ascii);
+
 
   return 0;
 }

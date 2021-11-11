@@ -15,7 +15,6 @@ Ising::Ising(int L, double T, string spinconfig)
   beta_in = 1. / T; //k = J = 1
   exp_vals = vec(4);
   w = vec(17, fill::zeros);
-  double exp_e, exp_m;
 
   metropolis();
 }
@@ -49,7 +48,6 @@ void Ising::metropolis()
     //
     //Metropolis test
     //
-
     //if dE < 0; accept
     //if dE > 0; compute w = exp(-beta*dE) and perform test:
     //compare w with random number r, if r < w; accept
@@ -78,8 +76,10 @@ void Ising::montecarlo(double T, int no_cycles)
   double exp_E_sq = 0;
   double exp_M = 0;
   double exp_M_sq = 0;
-  double exp_e = 0;
-  double exp_m = 0;
+  //double exp_e = 0;
+  //double exp_m = 0;
+  exp_e = vec(no_cycles,fill::zeros);
+  exp_m = vec(no_cycles,fill::zeros);
 
   for (int cycle = 0; cycle < no_cycles; cycle++)
   {
@@ -94,9 +94,8 @@ void Ising::montecarlo(double T, int no_cycles)
 
     double norm = 1./ (((double) cycle) * n_spins_in);
     //Samples
-    exp_e = exp_E * norm;
-    exp_m = exp_M * norm;
-    cout << exp_e << "  " << exp_m << endl;
+    exp_e(cycle) = exp_E * norm;
+    exp_m(cycle) = exp_M * norm;
   }
 
   //Final values
