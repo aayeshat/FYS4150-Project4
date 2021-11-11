@@ -81,7 +81,7 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_e = vec(no_cycles,fill::zeros);
   exp_m = vec(no_cycles,fill::zeros);
 
-  for (int cycle = 0; cycle < no_cycles; cycle++)
+  for (int cycle = 1; cycle < no_cycles; cycle++)
   {
 
     SpinSystem system(L_in, spinconfig_in);
