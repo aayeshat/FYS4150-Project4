@@ -50,6 +50,14 @@ int main()
        << ising.exp_vals << endl;
 
   analytic(T);
+  //ising.output(T, no_cycles);
+  ofstream fout;
+  fout.open("./out/data/montecarlo_cycle_expe_expe.txt");
+  ising.montecarlo(T, no_cycles);
+  // exp_e = exp_E * norm;
+  // exp_m = exp_M * norm;
+  fout << ising.exp_e << ising.exp_m << endl;
+  fout.close();
 
   return 0;
 }

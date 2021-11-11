@@ -15,6 +15,7 @@ Ising::Ising(int L, double T, string spinconfig)
   beta_in = 1. / T; //k = J = 1
   exp_vals = vec(4);
   w = vec(17, fill::zeros);
+  double exp_e, exp_m;
 
   metropolis();
 }
@@ -77,9 +78,8 @@ void Ising::montecarlo(double T, int no_cycles)
   double exp_E_sq = 0;
   double exp_M = 0;
   double exp_M_sq = 0;
-
-  ofstream fout;
-  fout.open("./out/data/montecarlo_cycle_expE_expM.txt");
+  double exp_e = 0;
+  double exp_m = 0;
 
   for (int cycle = 0; cycle < no_cycles; cycle++)
   {
@@ -92,11 +92,14 @@ void Ising::montecarlo(double T, int no_cycles)
     exp_M += abs(system.magn_in);
     exp_M_sq += system.magn_in * system.magn_in;
 
-    fout << cycle << "   " << exp_E << "   " << exp_E_sq << "   " << exp_M << "   " << exp_M_sq << endl;
+    double norm = 1./ (((double) cycle) * n_spins_in);
+    //Samples
+    exp_e = exp_E * norm;
+    exp_m = exp_M * norm;
+    cout << exp_e << "  " << exp_m << endl;
   }
 
-  fout.close();
-
+  //Final values
   //Compute energy and magnetization per spin
   exp_E /= n_spins_in * no_cycles;
   exp_E_sq /= n_spins_in * n_spins_in * no_cycles;
@@ -107,4 +110,20 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_vals(1) = exp_E_sq;
   exp_vals(2) = exp_M;
   exp_vals(3) = exp_M_sq;
+}
+
+void Ising::output(double T, int no_cycles){
+
+  // SpinSystem system(L_in, spinconfig_in);
+  // metropolis();
+  // Ising ising(L, T, "ordered");
+  // ising.montecarlo(T, no_cycles);
+  //
+  // ofstream fout;
+  // fout.open("./out/data/montecarlo_cycle_expE_expM.txt");
+  // // exp_e = exp_E * norm;
+  // // exp_m = exp_M * norm;
+  // fout << ising.exp_e << ising.exp_m << endl;
+  // fout.close();
+
 }
