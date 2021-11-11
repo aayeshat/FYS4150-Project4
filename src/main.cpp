@@ -33,7 +33,7 @@ void analytic(double T)
   cout << "e " << e << endl;
   cout << "e squared " << e_sq << endl;
   cout << "m " << m << endl;
-  cout << "m squared" << m_sq << endl;
+  cout << "m squared " << m_sq << endl;
 }
 
 int main()
