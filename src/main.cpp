@@ -12,10 +12,9 @@ using namespace arma;
 void analytic(double T)
 {
   double Z = 2. * exp(-8) + 2 * exp(8) + 12;
-  double Z_hyp = 4. * ( cosh(8.) + 3);
+  double Z_hyp = 4. * (cosh(8.) + 3);
 
-
-  double E_big = -32. / Z * sinh(8.);  //riktig for E
+  double E_big = -32. / Z * sinh(8.); //riktig for E
   double E_sq = 2. / Z * (256 * cosh(8));
   double M_big = 8. / Z * (exp(8) + 2);
   double M_sq = 32. / Z * (exp(8) + 1);
@@ -40,23 +39,23 @@ int main()
 {
 
   int L = 20;
-  double T = 2.4;
+  string temp = "1.0";  //T=1.0J/kB and T=2.4J/kB,
+  double T = stod(temp);
 
-  int no_cycles = 10000; //no. of monte carlo cycles
+  int no_cycles = 100000; //no. of monte carlo cycles
 
-  Ising ising(L, T, "unordered");
+  string spinconfig = "ordered"; //"ordered" eller "unordered"
+
+  Ising ising(L, T, spinconfig);
 
   analytic(T);
 
   ising.montecarlo(T, no_cycles);
-  //ising.exp_e.save("../out/data/energy_T1_ordered_problem5.txt", raw_ascii);
-  //ising.exp_e.save("../out/data/energy_T1_unordered_problem5.txt", raw_ascii);
 
-  //ising.exp_e.save("../out/data/energy_T24_ordered_problem5.txt", raw_ascii);
-  //ising.exp_e.save("../out/data/energy_T24_unordered_problem5.txt", raw_ascii);
+  ising.mc_cycles.save("../out/data/montecarlo_cycles.txt", raw_ascii);
 
-  ising. mc_cycles.save("../out/data/montecarlo_cycles.txt", raw_ascii);
-
+  ising.exp_e.save("../out/data/energy_T" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
+  ising.exp_m.save("../out/data/magnetization_T" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
 
   return 0;
 }

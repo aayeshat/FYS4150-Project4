@@ -1,14 +1,6 @@
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <armadillo>
-#include <random>
 #include "spin_system.hpp"
 
-using namespace std;
-using namespace arma;
-
-SpinSystem::SpinSystem(int L, string spinconfig)
+SpinSystem::SpinSystem(int L, std::string spinconfig)
 {
   L_in = L;
   n_spins_in = L * L;

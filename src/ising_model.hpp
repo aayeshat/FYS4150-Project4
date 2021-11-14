@@ -2,12 +2,17 @@
 #define ISING_MODEL_HPP
 
 #include <armadillo>
+#include <string>
+#include "spin_system.hpp"
 
 using namespace arma;
 using namespace std;
 
 class Ising
 {
+private:
+  void metropolis(SpinSystem system);
+
 public:
   int L_in;
   int n_spins_in;
@@ -21,8 +26,6 @@ public:
 
   Ising(int L, double T, string spinconfig);
 
-  //void metropolis(SpinSystem *system);
-  void metropolis();
   void montecarlo(double T, int no_cycles);
   void output(double T, int no_cycles);
 };

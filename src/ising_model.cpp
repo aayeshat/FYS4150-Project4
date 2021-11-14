@@ -1,9 +1,7 @@
 #include <iostream>
-#include <string>
 #include <iomanip>
 #include <armadillo>
 #include <random>
-#include "spin_system.hpp"
 #include "ising_model.hpp"
 
 Ising::Ising(int L, double T, string spinconfig)
@@ -15,13 +13,12 @@ Ising::Ising(int L, double T, string spinconfig)
   beta_in = 1. / T; //k = J = 1
   exp_vals = vec(4);
   w = vec(17, fill::zeros);
-
-  metropolis();
+  SpinSystem system(L_in, spinconfig_in);
+  metropolis(system);
 }
 
-void Ising::metropolis()
+void Ising::metropolis(SpinSystem system)
 {
-  SpinSystem system(L_in, spinconfig_in);
 
   //Mersienne Twister random number generator
   random_device rd;
@@ -70,7 +67,6 @@ void Ising::metropolis()
 
 void Ising::montecarlo(double T, int no_cycles)
 {
-
   //Initialize expectation values and exp. values squared
   double exp_E = 0;
   double exp_E_sq = 0;
@@ -81,22 +77,26 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_e = vec(no_cycles, fill::zeros);
   exp_m = vec(no_cycles, fill::zeros);
   mc_cycles = ivec(no_cycles, fill::zeros);
-  for (int cycle = 1; cycle < no_cycles; cycle++)
+
+  arma_rng::set_seed_random();
+
+  for (int cycle = 1; cycle <= no_cycles; cycle++)
   {
 
-    mc_cycles(cycle) = cycle;
     SpinSystem system(L_in, spinconfig_in);
-    metropolis();
+    metropolis(system);
 
     exp_E += system.energy_in;
     exp_E_sq += system.energy_in * system.energy_in;
     exp_M += abs(system.magn_in);
     exp_M_sq += system.magn_in * system.magn_in;
 
-    double norm = 1. / (((double)cycle) * n_spins_in);
+    double norm = 1. / (double)(cycle * n_spins_in);
+
     //Samples
-    exp_e(cycle) = exp_E * norm;
-    exp_m(cycle) = exp_M * norm;
+    mc_cycles(cycle - 1) = cycle;
+    exp_e(cycle - 1) = exp_E * norm;
+    exp_m(cycle - 1) = exp_M * norm;
   }
 
   //Final values
