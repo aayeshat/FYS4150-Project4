@@ -55,7 +55,7 @@ int main()
   //ising.exp_e.save("../out/data/energy_T24_ordered_problem5.txt", raw_ascii);
   //ising.exp_e.save("../out/data/energy_T24_unordered_problem5.txt", raw_ascii);
 
-
+  ising. mc_cycles.save("../out/data/montecarlo_cycles.txt", raw_ascii);
 
 
   return 0;

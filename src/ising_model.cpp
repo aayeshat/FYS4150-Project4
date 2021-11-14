@@ -78,12 +78,13 @@ void Ising::montecarlo(double T, int no_cycles)
   double exp_M_sq = 0;
   //double exp_e = 0;
   //double exp_m = 0;
-  exp_e = vec(no_cycles,fill::zeros);
-  exp_m = vec(no_cycles,fill::zeros);
-
+  exp_e = vec(no_cycles, fill::zeros);
+  exp_m = vec(no_cycles, fill::zeros);
+  mc_cycles = ivec(no_cycles, fill::zeros);
   for (int cycle = 1; cycle < no_cycles; cycle++)
   {
 
+    mc_cycles(cycle) = cycle;
     SpinSystem system(L_in, spinconfig_in);
     metropolis();
 
@@ -92,7 +93,7 @@ void Ising::montecarlo(double T, int no_cycles)
     exp_M += abs(system.magn_in);
     exp_M_sq += system.magn_in * system.magn_in;
 
-    double norm = 1./ (((double) cycle) * n_spins_in);
+    double norm = 1. / (((double)cycle) * n_spins_in);
     //Samples
     exp_e(cycle) = exp_E * norm;
     exp_m(cycle) = exp_M * norm;
@@ -111,7 +112,8 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_vals(3) = exp_M_sq;
 }
 
-void Ising::output(double T, int no_cycles){
+void Ising::output(double T, int no_cycles)
+{
 
   // SpinSystem system(L_in, spinconfig_in);
   // metropolis();
@@ -124,5 +126,4 @@ void Ising::output(double T, int no_cycles){
   // // exp_m = exp_M * norm;
   // fout << ising.exp_e << ising.exp_m << endl;
   // fout.close();
-
 }

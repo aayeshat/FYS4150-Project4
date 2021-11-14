@@ -17,6 +17,7 @@ public:
   vec exp_vals;
   string spinconfig_in;
   vec exp_e, exp_m;
+  ivec mc_cycles;
 
   Ising(int L, double T, string spinconfig);
 
