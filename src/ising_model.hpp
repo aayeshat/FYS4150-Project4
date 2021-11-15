@@ -11,17 +11,18 @@ using namespace std;
 class Ising
 {
 private:
-  void metropolis(SpinSystem system);
+  void metropolis(SpinSystem& system);
+  void initBoltzmann();
 
 public:
-  int L_in;
-  int n_spins_in;
-  int n_spins_squared_in;
-  double beta_in;
-  vec w;
+  int L;
+  int n_spins;
+  double beta;
+  vec boltzmann;
   vec exp_vals;
-  string spinconfig_in;
-  vec exp_e, exp_m;
+  string spinconfig;
+  vec exp_e;
+  vec exp_m;
   ivec mc_cycles;
 
   Ising(int L, double T, string spinconfig);

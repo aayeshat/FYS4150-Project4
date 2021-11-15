@@ -1,17 +1,17 @@
 #include "spin_system.hpp"
 
-SpinSystem::SpinSystem(int L, std::string spinconfig)
+SpinSystem::SpinSystem(int L_in, std::string spinconfig_in)
 {
-  L_in = L;
-  n_spins_in = L * L;
+  L = L_in;
+  n_spins = L * L;
 
-  if (spinconfig == "ordered")
+  if (spinconfig_in == "ordered")
   {
-    spin_mat_in = imat(L, L).fill(1);
+    spin_mat = imat(L, L).fill(1);
   }
-  if (spinconfig == "unordered")
+  if (spinconfig_in == "unordered")
   {
-    spin_mat_in = randi<imat>(L, L, distr_param(0, 1)) * (2) - 1;
+    spin_mat = 2 * randi<imat>(L, L, distr_param(0, 1)) - 1;
   }
   initialize();
 }
@@ -20,30 +20,31 @@ SpinSystem::SpinSystem(int L, std::string spinconfig)
 
 void SpinSystem::initialize()
 {
-  energy_in = 0;
-  magn_in = 0;
-  for (int i = 0; i < L_in; i++)
+  energy = 0;
+  magn = 0;
+  for (int i = 0; i < L; i++)
   {
-    for (int j = 0; j < L_in; j++)
+    for (int j = 0; j < L; j++)
     {
-      energy_in -= spin_mat(i, j) * (spin_mat(i + 1, j) + spin_mat(i, j + 1));
-      magn_in += spin_mat(i, j);
+
+      energy -= spin_mat(i, j) *
+                (spin_mat(idx(i, -1), j) + spin_mat(i, idx(j, 1)));
+
+      magn += spin_mat(i, j);
     }
   }
 }
 
 //Implementing the periodic boundary conditions in our spin matrix
 
-int SpinSystem::spin_mat(int i, int j)
+int SpinSystem::spin_matrix(int i, int j)
 {
-  return spin_mat_in(idx(i), idx(j));
+  return spin_mat(idx(i, 0), idx(j, 0));
 }
 
-//Index to impose periodic boundary conditions
-
-int SpinSystem::idx(int index)
+int SpinSystem::idx(int index, int add)
 {
-  return (index + L_in) % L_in;
+  return (index + L + add) % L;
 }
 
 //g++ -std=c++11 -larmadillo spin_system.cpp && ./a.out

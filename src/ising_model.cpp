@@ -4,35 +4,39 @@
 #include <random>
 #include "ising_model.hpp"
 
-Ising::Ising(int L, double T, string spinconfig)
+Ising::Ising(int L_in, double T_in, string spinconfig_in)
 {
-  L_in = L;
-  n_spins_in = L * L;
-  spinconfig_in = spinconfig;
-  n_spins_squared_in = n_spins_in * n_spins_in;
-  beta_in = 1. / T; //k = J = 1
+  L = L_in;
+  n_spins = L * L;
+  spinconfig = spinconfig_in;
+  beta = 1. / T_in; //k = J = 1
   exp_vals = vec(4);
-  w = vec(17, fill::zeros);
-  SpinSystem system(L_in, spinconfig_in);
-  metropolis(system);
+
+  initBoltzmann();
 }
 
-void Ising::metropolis(SpinSystem system)
+void Ising::initBoltzmann()
+{
+
+  boltzmann = vec(17, fill::zeros);
+
+  //Compute array w containing possible Delta_E values from -8J to 8J
+  for (int i = -8; i <= 8; i += 4)
+  {
+    boltzmann(i + 8) = exp(-1. *  beta * i);
+  }
+}
+
+void Ising::metropolis(SpinSystem& system)
 {
 
   //Mersienne Twister random number generator
   random_device rd;
   mt19937_64 gen(rd());
   uniform_real_distribution<double> random_number(0.0, 1.0);
-  uniform_real_distribution<double> random_to_L(0.0, L_in);
+  uniform_real_distribution<double> random_to_L(0.0, L);
 
-  //Compute array w containing possible Delta_E values from -8J to 8J
-  for (int i = 0; i <= 17; i += 4)
-  {
-    w(i) = exp(-beta_in * (i - 8));
-  }
-
-  for (int n = 0; n <= n_spins_in; n++)
+  for (int n = 0; n <= n_spins; n++)
   {
 
     //Choose a random spin in lattice
@@ -40,27 +44,37 @@ void Ising::metropolis(SpinSystem system)
     int j = random_to_L(gen);
 
     //Calculate energy difference from all neighbouring spins
-    int delta_E = 2 * system.spin_mat(i, j) * (system.spin_mat(i, j + 1) + system.spin_mat(i, j - 1) + system.spin_mat(i + 1, j) + system.spin_mat(i - 1, j));
+
+    int delta_E = 2 * system.spin_matrix(i, j)      //
+                  * (system.spin_matrix(i, j + 1)   //
+                     + system.spin_matrix(i, j - 1) //
+                     + system.spin_matrix(i + 1, j) //
+                     + system.spin_matrix(i - 1, j));
 
     //
     //Metropolis test
     //
     //if dE < 0; accept
     //if dE > 0; compute w = exp(-beta*dE) and perform test:
-    //compare w with random number r, if r < w; accept
+    //compare boltzmann with random number r, if r < boltzmann; accept
 
     if (delta_E <= 0)
     {
-      system.energy_in += delta_E;                    //accept and add energy
-      system.spin_mat_in(i, j) *= (-1);               //flip spin
-      system.magn_in += 2 * system.spin_mat_in(i, j); //update magnetization of new spin configuration
+       system.spin_mat(i, j) *= -1; //flip spin
+
+      system.energy += delta_E;
+      
+      //accept and add energy
+      system.magn += 2 * system.spin_mat(i, j); //update magnetization of new spin configuration
+
     }
-    //if dE > 0, (pre-calculated in w), flip spin and compare w with random number, and if < w; accept
-    else if (random_number(gen) < w(delta_E + 8))
+    //if dE > 0, (pre-calculated in boltzmann), flip spin and compare boltzmann with random number, and if < boltzmann; accept
+    else if (random_number(gen) < boltzmann(delta_E + 8))
     {
-      system.energy_in += delta_E;
-      system.spin_mat_in(i, j) *= (-1);
-      system.magn_in += 2 * system.spin_mat_in(i, j);
+      system.spin_mat(i, j) *= -1;
+
+      system.energy += delta_E;
+      system.magn += 2 * system.spin_mat(i, j);
     }
   }
 }
@@ -80,18 +94,19 @@ void Ising::montecarlo(double T, int no_cycles)
 
   arma_rng::set_seed_random();
 
+
+  SpinSystem system(L, spinconfig);
   for (int cycle = 1; cycle <= no_cycles; cycle++)
   {
 
-    SpinSystem system(L_in, spinconfig_in);
     metropolis(system);
+  
+    exp_E += system.energy;
+    exp_E_sq += system.energy * system.energy;
+    exp_M += abs(system.magn);
+    exp_M_sq += system.magn * system.magn;
 
-    exp_E += system.energy_in;
-    exp_E_sq += system.energy_in * system.energy_in;
-    exp_M += abs(system.magn_in);
-    exp_M_sq += system.magn_in * system.magn_in;
-
-    double norm = 1. / (double)(cycle * n_spins_in);
+    double norm = 1. / (double)(cycle * n_spins);
 
     //Samples
     mc_cycles(cycle - 1) = cycle;
@@ -101,10 +116,10 @@ void Ising::montecarlo(double T, int no_cycles)
 
   //Final values
   //Compute energy and magnetization per spin
-  exp_E /= n_spins_in * no_cycles;
-  exp_E_sq /= n_spins_in * n_spins_in * no_cycles;
-  exp_M /= n_spins_in * no_cycles;
-  exp_M_sq /= n_spins_in * n_spins_in * no_cycles;
+  exp_E /= n_spins * no_cycles;
+  exp_E_sq /= n_spins * n_spins * no_cycles;
+  exp_M /= n_spins * no_cycles;
+  exp_M_sq /= n_spins * n_spins * no_cycles;
 
   exp_vals(0) = exp_E;
   exp_vals(1) = exp_E_sq;
@@ -115,7 +130,7 @@ void Ising::montecarlo(double T, int no_cycles)
 void Ising::output(double T, int no_cycles)
 {
 
-  // SpinSystem system(L_in, spinconfig_in);
+  // SpinSystem system(L, spinconfig);
   // metropolis();
   // Ising ising(L, T, "ordered");
   // ising.montecarlo(T, no_cycles);

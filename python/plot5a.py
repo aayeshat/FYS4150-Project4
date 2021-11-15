@@ -11,7 +11,6 @@ mpl.rcParams["legend.fontsize"] = 7.5
 plt.rcParams["figure.figsize"] = (7, 5)
 
 mc = np.loadtxt("../out/data/montecarlo_cycles.txt", dtype="double")
-#mc = np.delete(mc, len(mc)-1) 
 
 
 e_ordered = np.loadtxt("../out/data/energy_T1.0_ordered_problem5.txt", dtype="double", usecols = (0), unpack = True, skiprows = 0)
@@ -22,9 +21,9 @@ plt.plot(mc, e_ordered, label="T=1.0 ordered", color="b")
 plt.plot(mc, e_unordered, label="T=1.0 unordered", color="c")
 plt.legend()
 plt.xlabel("MC_cycles")
-plt.ylabel("Energy per spins")
+plt.ylabel("<$ \epsilon$>")
 plt.grid(linestyle = '--', linewidth = 0.2)
-plt.savefig("../out/5a_T1.0.pdf")
+plt.savefig("../out/5a_T1.0_Energy.pdf")
 
 
 # e24_ordered = np.loadtxt("../out/data/energy_T2.4_ordered_problem5.txt", dtype="double", usecols = (0), unpack = True, skiprows = 0)

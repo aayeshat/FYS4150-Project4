@@ -15,15 +15,17 @@ class SpinSystem
 {
 private:
   void initialize();
-  int idx(int index);
+  int idx(int index, int add);
 
 public:
-  int L_in, n_spins_in;
-  double energy_in, magn_in;
-  imat spin_mat_in;
+  int L;
+  int n_spins;
+  double energy;
+  double magn;
+  imat spin_mat;
 
   SpinSystem(int L, std::string spinconfig);
-  int spin_mat(int i, int j);
+  int spin_matrix(int i, int j);
 };
 
 #endif
