@@ -1,5 +1,4 @@
 from matplotlib import pyplot as plt
-from scipy.stats import norm, uniform #, lognorm
 import numpy as np
 
 samples_T1_ord = np.loadtxt("../out/data/energy_T1.0_ordered_problem5.txt")
@@ -20,4 +19,4 @@ plt.hist(lowT_unord)
 plt.hist(highT_ord)
 plt.hist(highT_unord)
 plt.show()
-plt.savefig("../out/5_histogram.pdf")
+plt.savefig("../out/plot/5_histogram.pdf")
