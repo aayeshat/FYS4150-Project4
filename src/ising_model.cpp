@@ -4,13 +4,14 @@
 #include <random>
 #include "ising_model.hpp"
 
-Ising::Ising(int L_in, double T_in, string spinconfig_in)
+Ising::Ising(int L_in, double T_in, int burnin_t_in, string spinconfig_in)
 {
   L = L_in;
   n_spins = L * L;
   spinconfig = spinconfig_in;
   beta = 1. / T_in; //k = J = 1
-  exp_vals = vec(4);
+  burnin_t = burnin_t_in;
+  exp_vals = vec(6);
 
   initBoltzmann();
 }
@@ -51,7 +52,6 @@ void Ising::metropolis(SpinSystem &system)
                      + system.spin_matrix(i + 1, j) //
                      + system.spin_matrix(i - 1, j));
 
-
     if (delta_E <= 0)
     {
       system.spin_mat(i, j) *= -1;
@@ -68,14 +68,11 @@ void Ising::metropolis(SpinSystem &system)
   }
 }
 
-
 void Ising::montecarlo(double T, int no_cycles)
 {
   //Initialize expectation values and exp. values squared
   double exp_E = 0, exp_E_sq = 0, exp_M = 0, exp_M_sq = 0, C_v = 0, X = 0;
-  int burnin_t = 10e5
-  //double exp_e = 0;
-  //double exp_m = 0;
+
   exp_e = vec(no_cycles, fill::zeros);
   exp_m = vec(no_cycles, fill::zeros);
   exp_C_v = vec(no_cycles, fill::zeros);
@@ -87,7 +84,8 @@ void Ising::montecarlo(double T, int no_cycles)
 
   SpinSystem system(L, spinconfig);
 
-  for (int i = 0; i <= burnin_t; i++){
+  for (int i = 0; i <= burnin_t; i++)
+  {
     metropolis(system);
   }
 
@@ -125,8 +123,13 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_M /= n_spins * no_cycles;
   exp_M_sq /= n_spins * n_spins * no_cycles;
 
+  C_v /= n_spins * no_cycles;
+  X /= n_spins * no_cycles;
+
   exp_vals(0) = exp_E;
   exp_vals(1) = exp_E_sq;
   exp_vals(2) = exp_M;
   exp_vals(3) = exp_M_sq;
+  exp_vals(4) = C_v;
+  exp_vals(5) = X;
 }

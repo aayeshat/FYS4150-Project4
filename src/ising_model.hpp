@@ -18,6 +18,7 @@ public:
   int L;
   int n_spins;
   double beta;
+  int burnin_t;
   vec boltzmann;
   vec exp_vals;
   string spinconfig;
@@ -28,10 +29,9 @@ public:
   vec energy_samples;
   ivec mc_cycles;
 
-  Ising(int L, double T, string spinconfig);
+  Ising(int L, double T, int burnin_t, string spinconfig);
 
   void montecarlo(double T, int no_cycles);
-  void output(double T, int no_cycles);
 };
 
 #endif

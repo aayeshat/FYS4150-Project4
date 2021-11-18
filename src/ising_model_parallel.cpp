@@ -5,13 +5,14 @@
 #include <omp.h>
 #include "ising_model.hpp"
 
-Ising::Ising(int L_in, double T_in, string spinconfig_in)
+Ising::Ising(int L_in, double T_in, int burnin_t_in, string spinconfig_in)
 {
   L = L_in;
   n_spins = L * L;
   spinconfig = spinconfig_in;
   beta = 1. / T_in; //k = J = 1
-  exp_vals = vec(4);
+  burnin_t = burnin_t_in;
+  exp_vals = vec(6);
 
   initBoltzmann();
 }
@@ -83,7 +84,6 @@ void Ising::montecarlo(double T, int no_cycles)
 {
 
   double exp_E = 0, exp_E_sq = 0, exp_M = 0, exp_M_sq = 0;
-  int burnin_t = 10e5;
 
   arma_rng::set_seed_random();
   SpinSystem system(L, spinconfig);
@@ -92,12 +92,14 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_m = vec(no_cycles, fill::zeros);
   mc_cycles = ivec(no_cycles, fill::zeros);
 
-  for (int i = 0; i <= burnin_t; i++){
-    metropolis(system);
-  }
-
-    #pragma omp parallel reduction(+: exp_E, exp_E_sq, exp_M, exp_M_sq)
+#pragma omp parallel reduction(+: exp_E, exp_E_sq, exp_M, exp_M_sq)
   {
+
+    #pragma omp for
+    for (int i = 0; i <= burnin_t; i++)
+    {
+      metropolis(system);
+    }
 
     #pragma omp for
     for (int cycle = 1; cycle <= no_cycles; cycle++)
@@ -115,6 +117,12 @@ void Ising::montecarlo(double T, int no_cycles)
         double norm = 1. / (double)(cycle * n_spins);
         exp_e(cycle - 1) = exp_E * norm;
         exp_m(cycle - 1) = exp_M * norm;
+
+        //the specific heat capacity (normalized to number of spins), the susceptibility (normalized to number of spins):
+        exp_C_v(cycle - 1) = C_v * norm;
+        exp_X(cycle - 1) = X * norm;
+
+        energy_samples(cycle - 1) = system.energy / n_spins;
       }
 
       mc_cycles(cycle - 1) = cycle;
@@ -128,26 +136,15 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_M /= n_spins * no_cycles;
   exp_M_sq /= n_spins * n_spins * no_cycles;
 
+  C_v /= n_spins * no_cycles;
+  X /= n_spins * no_cycles;
+
   exp_vals(0) = exp_E;
   exp_vals(1) = exp_E_sq;
   exp_vals(2) = exp_M;
   exp_vals(3) = exp_M_sq;
-}
-
-void Ising::output(double T, int no_cycles)
-{
-
-  // SpinSystem system(L, spinconfig);
-  // metropolis();
-  // Ising ising(L, T, "ordered");
-  // ising.montecarlo(T, no_cycles);
-  //
-  // ofstream fout;
-  // fout.open("./out/data/montecarlo_cycle_expE_expM.txt");
-  // // exp_e = exp_E * norm;
-  // // exp_m = exp_M * norm;
-  // fout << ising.exp_e << ising.exp_m << endl;
-  // fout.close();
+  exp_vals(4) = C_v;
+  exp_vals(5) = X;
 }
 
 //g++ main.cpp spin_system.cpp ising_model_parallel.cpp -larmadillo -fopenmp
