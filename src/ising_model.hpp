@@ -25,6 +25,7 @@ public:
   vec exp_m;
   vec  exp_C_v;
   vec  exp_X;
+  vec energy_samples;
   ivec mc_cycles;
 
   Ising(int L, double T, string spinconfig);
