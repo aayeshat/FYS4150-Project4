@@ -23,11 +23,11 @@ void Ising::initBoltzmann()
   //Compute array w containing possible Delta_E values from -8J to 8J
   for (int i = -8; i <= 8; i += 4)
   {
-    boltzmann(i + 8) = exp(-1. *  beta * i);
+    boltzmann(i + 8) = exp(-1. * beta * i);
   }
 }
 
-void Ising::metropolis(SpinSystem& system)
+void Ising::metropolis(SpinSystem &system)
 {
 
   //Mersienne Twister random number generator
@@ -60,13 +60,12 @@ void Ising::metropolis(SpinSystem& system)
 
     if (delta_E <= 0)
     {
-       system.spin_mat(i, j) *= -1; //flip spin
+      system.spin_mat(i, j) *= -1; //flip spin
 
       system.energy += delta_E;
-      
+
       //accept and add energy
       system.magn += 2 * system.spin_mat(i, j); //update magnetization of new spin configuration
-
     }
     //if dE > 0, (pre-calculated in boltzmann), flip spin and compare boltzmann with random number, and if < boltzmann; accept
     else if (random_number(gen) < boltzmann(delta_E + 8))
@@ -86,25 +85,31 @@ void Ising::montecarlo(double T, int no_cycles)
   double exp_E_sq = 0;
   double exp_M = 0;
   double exp_M_sq = 0;
+  double C_v = 0;
+  double X = 0;
   //double exp_e = 0;
   //double exp_m = 0;
   exp_e = vec(no_cycles, fill::zeros);
   exp_m = vec(no_cycles, fill::zeros);
+  exp_C_v = vec(no_cycles, fill::zeros);
+  exp_X = vec(no_cycles, fill::zeros);
   mc_cycles = ivec(no_cycles, fill::zeros);
 
   arma_rng::set_seed_random();
-
 
   SpinSystem system(L, spinconfig);
   for (int cycle = 1; cycle <= no_cycles; cycle++)
   {
 
     metropolis(system);
-  
+
     exp_E += system.energy;
     exp_E_sq += system.energy * system.energy;
     exp_M += abs(system.magn);
     exp_M_sq += system.magn * system.magn;
+
+    C_v += (exp_E_sq - (exp_E * exp_E)) / T * T;
+    X += (exp_M_sq - (exp_M * exp_M)) / T;
 
     double norm = 1. / (double)(cycle * n_spins);
 
@@ -112,6 +117,10 @@ void Ising::montecarlo(double T, int no_cycles)
     mc_cycles(cycle - 1) = cycle;
     exp_e(cycle - 1) = exp_E * norm;
     exp_m(cycle - 1) = exp_M * norm;
+
+    //the specific heat capacity (normalized to number of spins), the susceptibility (normalized to number of spins):
+    exp_C_v(cycle - 1) = C_v * norm;
+    exp_X(cycle - 1) = X * norm;
   }
 
   //Final values

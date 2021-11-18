@@ -38,7 +38,7 @@ void analytic(double T)
 int main()
 {
 
-  int L = 20;
+  int L = 2;
   string temp = "1.0"; //T=1.0J/kB and T=2.4J/kB,
   double T = stod(temp);
 
@@ -53,8 +53,13 @@ int main()
   ising.mc_cycles.save("../out/data/montecarlo_cycles.txt", raw_ascii);
   ising.exp_e.save("../out/data/energy_T" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
   ising.exp_m.save("../out/data/magnetization_T" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
-
+  ising.exp_C_v.save("../out/data/heatcapacity" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
+  ising.exp_X.save("../out/data/susceptivility" + temp + "_" + spinconfig + "_problem5.txt", raw_ascii);
+  
+  
+  
   return 0;
+
 }
 
 //g++ -std=c++11 -larmadillo main.cpp && ./a.out

@@ -23,6 +23,8 @@ public:
   string spinconfig;
   vec exp_e;
   vec exp_m;
+  vec  exp_C_v;
+  vec  exp_X;
   ivec mc_cycles;
 
   Ising(int L, double T, string spinconfig);
