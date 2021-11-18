@@ -83,6 +83,7 @@ void Ising::montecarlo(double T, int no_cycles)
 {
 
   double exp_E = 0, exp_E_sq = 0, exp_M = 0, exp_M_sq = 0;
+  int burnin_t = 10e5;
 
   arma_rng::set_seed_random();
   SpinSystem system(L, spinconfig);
@@ -90,6 +91,10 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_e = vec(no_cycles, fill::zeros);
   exp_m = vec(no_cycles, fill::zeros);
   mc_cycles = ivec(no_cycles, fill::zeros);
+
+  for (int i = 0; i <= burnin_t; i++){
+    metropolis(system);
+  }
 
     #pragma omp parallel reduction(+: exp_E, exp_E_sq, exp_M, exp_M_sq)
   {
@@ -108,7 +113,7 @@ void Ising::montecarlo(double T, int no_cycles)
       #pragma omp critical
       {
         double norm = 1. / (double)(cycle * n_spins);
-        exp_e(cycle - 1) = exp_E /;
+        exp_e(cycle - 1) = exp_E * norm;
         exp_m(cycle - 1) = exp_M * norm;
       }
 
