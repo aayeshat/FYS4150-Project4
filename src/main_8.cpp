@@ -11,19 +11,20 @@ using namespace arma;
 
 int main()
 {
-  int burnin_t = 10;
+  int burnin_t = 10e5;
 
   string spinconfig = "unordered"; //"ordered" or "unordered"
-  int no_cycles = 100;
+  int no_cycles = 10000;
 
   double min_t = 2.1;
   double max_t = 2.4;
-  double step_size = 0.003;
+  double step_size = 0.05;
   int n_step = (max_t - min_t) / step_size + 1;
 
-  int L_array[4] = {20, 40, 80, 100};
+  // int L_array[4] = {20, 40, 80, 100};
+    int L_array[1] = {20};
 
-  for (int L_index = 0; L_index < 4; L_index++)
+  for (int L_index = 0; L_index < 1; L_index++)
   {
     int L = L_array[L_index];
 
@@ -42,6 +43,9 @@ int main()
       L_exp_vals.row(ti).col(2) = exp_vals(2);
       L_exp_vals.row(ti).col(3) = exp_vals(4);
       L_exp_vals.row(ti).col(4) = exp_vals(5);
+
+
+
     }
 
     L_exp_vals.print("T  exp_E   exp_M   C_v    X");

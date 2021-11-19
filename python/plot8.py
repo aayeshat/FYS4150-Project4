@@ -18,6 +18,8 @@ exp_E_ordered_40, exp_M_ordered_40, C_v_ordered_40, X_ordered_40 = np.loadtxt(ba
 exp_E_ordered_80, exp_M_ordered_80, C_v_ordered_80, X_ordered_80 = np.loadtxt(basepath +"/energy_L80_ordered_problem8.txt", dtype="double", usecols = (1,2,3,4), unpack = True, skiprows = 0)
 exp_E_ordered_100, exp_M_ordered_100, C_v_ordered_100, X_ordered_100 = np.loadtxt(basepath +"/energy_L100_ordered_problem8.txt", dtype="double", usecols = (1,2,3,4), unpack = True, skiprows = 0)
 
+# T, exp_E_ordered_100, exp_M_ordered_100, C_v_ordered_100, X_ordered_100 = zip(*sorted(zip(T, exp_E_ordered_100, exp_M_ordered_100, C_v_ordered_100, X_ordered_100)))
+
 
 exp_E_unordered_20, exp_M_unordered_20, C_v_unordered_20, X_unordered_20 = np.loadtxt(basepath +"/energy_L20_unordered_problem8.txt", dtype="double", usecols = (1,2,3,4), unpack = True, skiprows = 0)
 exp_E_unordered_40, exp_M_unordered_40, C_v_unordered_40, X_unordered_40 = np.loadtxt(basepath +"/energy_L40_unordered_problem8.txt", dtype="double", usecols = (1,2,3,4), unpack = True, skiprows = 0)
@@ -102,9 +104,9 @@ plt.savefig("../out/plot8/8_energy_ordered_C_v.pdf")
 
 plt.figure()
 plt.plot(T, C_v_unordered_20, label="L20", color="b")
-plt.plot(T, C_v_unordered_40, label="L40", color="g")
-plt.plot(T, C_v_unordered_80, label="L80", color="r")
-plt.plot(T, C_v_unordered_100, label="L100", color="k")
+# plt.plot(T, C_v_unordered_40, label="L40", color="g")
+# plt.plot(T, C_v_unordered_80, label="L80", color="r")
+# plt.plot(T, C_v_unordered_100, label="L100", color="k")
 
 plt.legend()
 plt.title("Spins unordered")
@@ -113,7 +115,7 @@ plt.ylabel("C_v")
 # plt.xscale("log")
 plt.grid(linestyle = '--', linewidth = 0.2)
 plt.savefig("../out/plot8/8_energy_unordered_C_v.pdf")
-
+plt.show()
 
 
 ##X
@@ -134,9 +136,9 @@ plt.savefig("../out/plot8/8_energy_ordered_X.pdf")
 
 plt.figure()
 plt.plot(T, X_unordered_20, label="L20", color="b")
-plt.plot(T, X_unordered_40, label="L40", color="g")
-plt.plot(T, X_unordered_80, label="L80", color="r")
-plt.plot(T, X_unordered_100, label="L100", color="k")
+# plt.plot(T, X_unordered_40, label="L40", color="g")
+# plt.plot(T, X_unordered_80, label="L80", color="r")
+# plt.plot(T, X_unordered_100, label="L100", color="k")
 
 plt.legend()
 plt.title("Spins unordered")
@@ -145,3 +147,4 @@ plt.ylabel("X")
 # plt.xscale("log")
 plt.grid(linestyle = '--', linewidth = 0.2)
 plt.savefig("../out/plot8/8_energy_unordered_X.pdf")
+plt.show()
