@@ -39,7 +39,6 @@ void Ising::metropolis(SpinSystem &system)
 
   for (int n = 0; n <= n_spins; n++)
   {
-
     //Choose a random spin in lattice
     int i = random_to_L(gen);
     int j = random_to_L(gen);
