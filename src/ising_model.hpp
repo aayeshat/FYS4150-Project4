@@ -28,6 +28,7 @@ public:
   vec  exp_X;
   vec energy_samples;
   ivec mc_cycles;
+  double exp_E, exp_E_sq, exp_M, exp_M_sq;
 
   Ising(int L, double T, int burnin_t, string spinconfig);
 
