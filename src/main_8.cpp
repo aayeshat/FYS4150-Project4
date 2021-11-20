@@ -16,26 +16,26 @@ int main()
   int burnin_t = 0;
 
   string spinconfig = "unordered"; //"ordered" or "unordered"
-  int no_cycles = 1e6;
+  int no_cycles = 100;
 
   double min_t = 2.1;
   double max_t = 2.4;
   double step_size = 0.005;
-  int n_step = (max_t - min_t) / step_size + 1;
+  int t_step = (max_t - min_t) / step_size + 1;
 
   int L_array[4] = {40, 60, 80, 100};
-  //int L_array[1] = {80};
-  mat L_exp_vals(n_step + 1, 5);
+  //int L_array[1] = {40};
+  mat L_exp_vals(t_step + 1, 5);
 
-  for (int L_index = 0; L_index < 1; L_index++)
+  for (int L_index = 0; L_index < 4; L_index++)
   {
     int L = L_array[L_index];
 
-    mat L_exp_vals(n_step + 1, 5);
+    mat L_exp_vals(t_step + 1, 5);
 
     #pragma omp parallel for ordered
 
-    for (int ti = 0; ti <= n_step; ti += 1)
+    for (int ti = 0; ti <= t_step; ti += 1)
     {
       double T = (ti * step_size) + min_t;
       Ising ising(L, T, burnin_t, spinconfig);
@@ -49,12 +49,11 @@ int main()
       L_exp_vals.row(ti).col(3) = exp_vals(4);
       L_exp_vals.row(ti).col(4) = exp_vals(5);
 
-
     }
     #pragma omp ordered
 
-    L_exp_vals.print("T  exp_E   exp_M   C_v    X");
-    L_exp_vals.save("../out/data_8/L" + to_string(L) + "_" + spinconfig + "_problem8.txt", raw_ascii);
+    L_exp_vals.print("    T      exp_E        exp_M      C_v      X");
+    L_exp_vals.save("../out/data_8/dummyL" + to_string(L) + "_" + spinconfig + "_problem8.txt", raw_ascii);
   }
 
   return 0;
