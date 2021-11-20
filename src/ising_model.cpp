@@ -110,12 +110,12 @@ void Ising::montecarlo(double T, int no_cycles)
     // exp_C_v(cycle - 1) = C_v * norm;
     // exp_X(cycle - 1) = X * norm;
 
-    energy_samples(cycle - 1) = system.energy / n_spins;
+    // energy_samples(cycle - 1) = system.energy / n_spins;
   }
 
 
-  //Final values for problem 4
-  //Compute energy and magnetization per spin
+  //Final values
+
   double exp_total_E = exp_E / no_cycles;
   double exp_E_total_sq = exp_E_sq / no_cycles;
   double exp_total_M = exp_M / no_cycles;
@@ -123,8 +123,6 @@ void Ising::montecarlo(double T, int no_cycles)
 
   C_v = (exp_E_total_sq - (exp_total_E * exp_total_E)) / (n_spins * T * T);
   X = (exp_total_M_sq - (exp_total_M * exp_total_M)) / (n_spins * T);
-
-
 
   exp_E /= n_spins * no_cycles;
   exp_E_sq /= n_spins * n_spins * no_cycles;
@@ -138,7 +136,6 @@ void Ising::montecarlo(double T, int no_cycles)
   exp_vals(3) = exp_M_sq;
   exp_vals(4) = C_v;
   exp_vals(5) = X;
-
 
 
   // cout << exp_E_sq << endl;
