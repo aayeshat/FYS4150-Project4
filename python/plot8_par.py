@@ -10,6 +10,7 @@ mpl.rcParams["ytick.labelsize"] = 12
 mpl.rcParams["legend.fontsize"] = 7.5
 plt.rcParams["figure.figsize"] = (7,5)
 
+basepath = "../out/data_8";
 T, exp_E_ordered_20, exp_M_ordered_20, C_v_ordered_20, X_ordered_20 = np.loadtxt(basepath +"/energy_L20_ordered_problem8.txt", dtype="double", usecols = (0,1,2,3,4), unpack = True, skiprows = 0)
 T, exp_E_ordered_40, exp_M_ordered_40, C_v_ordered_40, X_ordered_40 = np.loadtxt(basepath +"/energy_L40_ordered_problem8.txt", dtype="double", usecols = (0,1,2,3,4), unpack = True, skiprows = 0)
 T, exp_E_ordered_80, exp_M_ordered_80, C_v_ordered_80, X_ordered_80 = np.loadtxt(basepath +"/energy_L80_ordered_problem8.txt", dtype="double", usecols = (0,1,2,3,4), unpack = True, skiprows = 0)
