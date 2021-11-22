@@ -82,20 +82,22 @@ void Ising::metropolis(SpinSystem &system)
 
 void Ising::montecarlo(double T, int no_cycles)
 {
+  double exp_E = 0, exp_E_sq = 0, exp_M = 0, exp_M_sq = 0, C_v = 0, X = 0;
 
-  double exp_E = 0, exp_E_sq = 0, exp_M = 0, exp_M_sq = 0;
+  // exp_e = vec(no_cycles, fill::zeros);
+  // exp_m = vec(no_cycles, fill::zeros);
+  // exp_C_v = vec(no_cycles, fill::zeros);
+  // exp_X = vec(no_cycles, fill::zeros);
+  // mc_cycles = ivec(no_cycles, fill::zeros);
+  // energy_samples = vec(no_cycles, fill::zeros);
 
   arma_rng::set_seed_random();
+
   SpinSystem system(L, spinconfig);
 
-  exp_e = vec(no_cycles, fill::zeros);
-  exp_m = vec(no_cycles, fill::zeros);
-  mc_cycles = ivec(no_cycles, fill::zeros);
-
-#pragma omp parallel reduction(+: exp_E, exp_E_sq, exp_M, exp_M_sq)
+  #pragma omp parallel reduction(+: exp_E, exp_E_sq, exp_M, exp_M_sq, C_v, X)
   {
 
-    #pragma omp for
     for (int i = 0; i <= burnin_t; i++)
     {
       metropolis(system);
@@ -112,39 +114,48 @@ void Ising::montecarlo(double T, int no_cycles)
       exp_M += abs(system.magn);
       exp_M_sq += system.magn * system.magn;
 
-      #pragma omp critical
-      {
-        double norm = 1. / (double)(cycle * n_spins);
-        exp_e(cycle - 1) = exp_E * norm;
-        exp_m(cycle - 1) = exp_M * norm;
+      //   double norm = 1. / (double)(cycle * n_spins);
 
-        //the specific heat capacity (normalized to number of spins), the susceptibility (normalized to number of spins):
-        exp_C_v(cycle - 1) = C_v * norm;
-        exp_X(cycle - 1) = X * norm;
+      //Samples
+      //  mc_cycles(cycle - 1) = cycle;
+      //  exp_e(cycle - 1) = exp_E * norm;
+      //  exp_m(cycle - 1) = exp_M * norm;
 
-        energy_samples(cycle - 1) = system.energy / n_spins;
-      }
+      //the specific heat capacity (normalized to number of spins), the susceptibility (normalized to number of spins):  
+      // exp_C_v(cycle - 1) = C_v * norm;
+      // exp_X(cycle - 1) = X * norm;
 
-      mc_cycles(cycle - 1) = cycle;
+      // energy_samples(cycle - 1) = system.energy / n_spins;
+    }
+
+    //Final values
+
+    #pragma omp critical
+    {
+      double exp_total_E = exp_E / no_cycles;
+      double exp_E_total_sq = exp_E_sq / no_cycles;
+      double exp_total_M = exp_M / no_cycles;
+      double exp_total_M_sq = exp_M_sq / no_cycles;
+
+      C_v = (exp_E_total_sq - (exp_total_E * exp_total_E)) / (n_spins * T * T);
+      X = (exp_total_M_sq - (exp_total_M * exp_total_M)) / (n_spins * T);
+
+      exp_E /= n_spins * no_cycles;
+      exp_E_sq /= n_spins * n_spins * no_cycles;
+      exp_M /= n_spins * no_cycles;
+      exp_M_sq /= n_spins * n_spins * no_cycles;
+
+      exp_vals(0) = exp_E;
+      exp_vals(1) = exp_E_sq;
+      exp_vals(2) = exp_M;
+      exp_vals(3) = exp_M_sq;
+      exp_vals(4) = C_v;
+      exp_vals(5) = X;
+
+      // cout << exp_E_sq << endl;
+      // cout << exp_vals(1) << endl;
     }
   }
-
-  //Final values
-  //Compute energy and magnetization per spin
-  exp_E /= n_spins * no_cycles;
-  exp_E_sq /= n_spins * n_spins * no_cycles;
-  exp_M /= n_spins * no_cycles;
-  exp_M_sq /= n_spins * n_spins * no_cycles;
-
-  C_v /= n_spins * no_cycles;
-  X /= n_spins * no_cycles;
-
-  exp_vals(0) = exp_E;
-  exp_vals(1) = exp_E_sq;
-  exp_vals(2) = exp_M;
-  exp_vals(3) = exp_M_sq;
-  exp_vals(4) = C_v;
-  exp_vals(5) = X;
 }
 
 //g++ main.cpp spin_system.cpp ising_model_parallel.cpp -larmadillo -fopenmp
