@@ -10,8 +10,8 @@ mpl.rcParams["ytick.labelsize"] = 12
 mpl.rcParams["legend.fontsize"] = 7.5
 plt.rcParams["figure.figsize"] = (7, 5)
 
-startPath = "../out/data_8/energy_";
-endPath= "_unordered_problem8.bin"
+startPath = "../out/data_8/energy_parallel_Limtited_";
+endPath= "_unordered_problem8.txt"
 
 T = np.loadtxt(startPath + "L40" + endPath, dtype="double", usecols = (0), unpack = True, skiprows = 0)
 
