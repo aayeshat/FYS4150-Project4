@@ -2,7 +2,8 @@
 
 
 --- Repo is a little messy now ---
-Check branch cana for what we did with parallelization, latest python script etc --
+
+-- Check branch cana for what we did with parallelization, latest python script etc --
 
 makefile for mac only:
 
