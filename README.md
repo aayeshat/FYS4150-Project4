@@ -1,5 +1,21 @@
 # Project4
 
+
+--- Repo is a little messy now ---
+Check branch cana for what we did with parallelization, latest python script etc --
+
+makefile for mac only:
+
+main_8.cpp contains the parallelized code and writes to file
+build: make all_par 
+run: ./main_8.o
+
+main.cpp contains what we did initially, like comparing numerical and exact values
+build: make all_main0
+run: ./main0.o
+
+------
+
 The topic of this project is the Ising model in two dimensions. We will use this simple model to explore temperature-dependent behaviour in ferromagnets. A particular goal is to numerically estimate the critical temperature at which our 2D system undergoes a phase transition, from a magnetized phase to a phase with no net magnetization.
 On the methodological side, our focus in this project is the Markov Chain Monte Carlo method for sampling from probability distributions of many variables, and how the resulting samples can be used to approximate probability distributions and expectation values for derived quantities; and using parallelization to speed up our code.
 
