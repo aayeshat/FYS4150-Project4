@@ -13,21 +13,21 @@ int main()
 {
   double T, exp_E, exp_E_sq, exp_M, exp_M_sq, C_v, X;
   double exp_E_sum, exp_E_sq_sum, exp_M_sum, exp_M_sq_sum;
-  int burnin_t = 0;
+  int burnin_t = 1e5;
 
   string spinconfig = "unordered"; //"ordered" or "unordered"
-  int no_cycles = 100;
+  int no_cycles = 1e6;
 
-  double min_t = 2.1;
-  double max_t = 2.4;
+  double min_t = 2.25;
+  double max_t = 2.35;
   double step_size = 0.005;
   int t_step = (max_t - min_t) / step_size + 1;
 
-  int L_array[4] = {40, 60, 80, 100};
-  //int L_array[1] = {40};
+  //int L_array[4] = {40, 60, 80, 100};
+  int L_array[3] = {60,80,100};
   mat L_exp_vals(t_step + 1, 5);
 
-  for (int L_index = 0; L_index < 4; L_index++)
+  for (int L_index = 0; L_index < 3; L_index++)
   {
     int L = L_array[L_index];
 
@@ -53,7 +53,7 @@ int main()
     #pragma omp ordered
 
     L_exp_vals.print("    T      exp_E        exp_M      C_v      X");
-    L_exp_vals.save("../out/data_8/dummyL" + to_string(L) + "_" + spinconfig + "_problem8.txt", raw_ascii);
+    L_exp_vals.save("../out/data_8/100k_cycles_L_" + to_string(L) + "_" + spinconfig + "_problem8.txt", raw_ascii);
   }
 
   return 0;

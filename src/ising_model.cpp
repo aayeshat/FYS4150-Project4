@@ -88,7 +88,6 @@ void Ising::montecarlo(double T, int no_cycles)
     metropolis(system);
   }
 
-
   for (int cycle = 1; cycle <= no_cycles; cycle++)
   {
 
@@ -99,20 +98,8 @@ void Ising::montecarlo(double T, int no_cycles)
     exp_M += abs(system.magn);
     exp_M_sq += system.magn * system.magn;
 
-    double norm = 1. / (double)(cycle * n_spins);
-
-    //Samples
-    mc_cycles(cycle - 1) = cycle;
-    exp_e(cycle - 1) = exp_E * norm;
-    exp_m(cycle - 1) = exp_M * norm;
-
-    //the specific heat capacity (normalized to number of spins), the susceptibility (normalized to number of spins):
-    // exp_C_v(cycle - 1) = C_v * norm;
-    // exp_X(cycle - 1) = X * norm;
-
     // energy_samples(cycle - 1) = system.energy / n_spins;
   }
-
 
   //Final values
 
@@ -125,10 +112,16 @@ void Ising::montecarlo(double T, int no_cycles)
   X = (exp_total_M_sq - (exp_total_M * exp_total_M)) / (n_spins * T);
 
   exp_E /= n_spins * no_cycles;
-  exp_E_sq /= n_spins * n_spins * no_cycles;
+  exp_E_sq /= n_spins * no_cycles;
   exp_M /= n_spins * no_cycles;
-  exp_M_sq /= n_spins * n_spins * no_cycles;
+  exp_M_sq /= n_spins * no_cycles;
 
+  cout << "exp_E " << exp_E << endl;
+  cout << "exp_E_sq " <<exp_E_sq << endl;
+  cout << "exp_M " << exp_M << endl;
+  cout << "exp_M_sq " << exp_M_sq << endl;
+  cout << "C_v " << C_v << endl;
+  cout << "X " << X << endl;
 
   exp_vals(0) = exp_E;
   exp_vals(1) = exp_E_sq;
