@@ -7,11 +7,15 @@ Check branch cana for what we did with parallelization, latest python script etc
 makefile for mac only:
 
 main_8.cpp contains the parallelized code and writes to file
+
 build: make all_par 
+
 run: ./main_8.o
 
 main.cpp contains what we did initially, like comparing numerical and exact values
+
 build: make all_main0
+
 run: ./main0.o
 
 ------
